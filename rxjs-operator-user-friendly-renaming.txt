@@ -1,0 +1,76 @@
+// ( ... streams) -> Latest tuple
+
+export const whenAllReady = forkJoin;
+
+//-Map family (single source) -
+export const transform = <A, B>(f: (a:A)=>B) =>
+(src: Observable<A>) => src.pipe(map(f));
+
+export const keep = <T>(p: (t:T)=>boolean) =>
+(src: Observable<T>) => src.pipe(rxFilter(p));
+
+export const onlyChanged = <T, K>(key ?: (t:T)=>K) =>
+(src: Observable<T>) =>
+key
+? src.pipe(distinctUntilChanged((a,b)=> key(a) === key(b)))
+: src.pipe(distinctUntilChanged());
+
+// Rate control
+export const quietAfter = (ms:number) => (src:Observable<any>) => src.pipe(debounceTime(ms));
+export const atMostEvery = (ms:number) => (src: Observable<any>) => src.pipe(throttleTime(ms));
+export const sampleEvery = (ms:number) => (src: Observable<any>) => src.pipe(sampleTime(ms));
+
+//-Apply family (many sources)
+export const combineState = combineLatest;
+export const withState = <E,S>(state$:Observable<S>) =>
+(ev$:Observable<E>) => ev$.pipe(withLatestFrom(state$));
+// Promise.all-like, one-shot
+
+//- MergeMap family (higher-order) -
+export const latestOnly = <T,R>(project: (t:T)=>Observable<R>) =>
+(src: Observable<T>) => src.pipe(switchMap(project));
+
+export const inSequence = <T,R>(project: (t:T)=>Observable<R>) =>
+(src: Observable<T>) => src.pipe(concatMap(project));
+
+export const concurrently = <T,R>(project: (t:T)=>Observable<R>, k=Infinity) =>
+(src: Observable<T>) => src.pipe(mergeMap(project, k));
+
+//-Sharing / caching
+export const cacheLatest = <T>() =>
+(src: Observable<T>) => src.pipe(shareReplay({ bufferSize: 1, refCount: true }));
+
+fallAftersilence<I>(ms) and retryAfter<l>(attempts, delayMs) would serve both.
+
+until(stop$) - upload-queue's untilUploadsCancelled and websocket's untilDisconnected are both exactly takeUntil, already written generically (<T>), just under different names.
+
+Tier 2 - shared vocabulary only (thin renames of one RxJS operator)
+
+waitFor<T>(ms) (= debounceTime), onlyChanged<T>(compare?) (= distinctUntilChanged), latest(project) (= switchMap - currently loadLatest/saveLatest), and atMost(n, project) (= mergeMap with concurrency - currently
+saveInvoicesAtMost/uploadFilesAtMost). These carry no logic of their own, so extraction buys consistency of the teaching vocabulary across samples rather than deduplication. Since you've already standardized on waitFor/recoverFailure
+naming, these fit naturally in the same shared module.
+
+What should stay per-domain
+
+The onlyX predicate filters (onlyComplete, onlySubmittedOrders, onlyWatchedSymbols, ... ), the mapXToY projections, and the xOne effect journeys (searchOne, autosaveOne, uploadOneFileResiliently). Their entire value is the domain
+predicate or outcome shaping behind a business name - a generic only(predicate) is just filter again. Note the xOne journeys would all shrink once they use the generic recoverFailure.
+
+Where to put them, and one pedagogical trade-off
+
+I'd suggest a samples/shared-operators.ts (with its own spec) rather than promoting into src/ right away - it keeps the library's public API untouched while the vocabulary settles. The trade-off to be aware of: today each sample teaches
+'extract your domain operators"; with a shared module, step 2 becomes a three-layer story - RxJS primitive + shared policy vocabulary (waitFor, recoverFailure, until) domain binding (onlyComplete, autosaveOne). I'd argue that's
+actually a better lesson (it shows where reuse genuinely lives vs. where naming lives), but it does change what the docs' four-step recipe says, so docs/fp-style-approach-for-custom-operators.md would want a paragraph on it.
+
+If you want, I can implement it: extract Tier 1 (and optionally Tier 2) into samples/shared-operators.ts, rewire the five samples, add a spec for the shared module, and verify the whole suite.
+
+* Cogitated for 1m 175
+
+> yes lets do it
+
+. I'll start by reading the three remaining samples and their specs to get the exact operator bodies and signatures, plus the README samples table.
+
+Read 3 files
+
+. Now let me read the three remaining specs and check the README/docs spots that reference these operator names.
+
+-----------

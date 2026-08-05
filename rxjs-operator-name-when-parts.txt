@@ -1,0 +1,104 @@
+
+
+repeatWhen()
+-----------------------------------------------------------------------------------------
+Returns an Observable that mirrors the source Observable with the exception of a complete. If the source Observable calls complete, this method will emit to the Observable returned from notifier. If that Observable calls complete or error, then this method will call complete or error on the child subscription. Otherwise this method will resubscribe to the source Observable.
+
+repeatWhen<T>(notifier: (notifications: Observable<void>) => ObservableInput<any>): MonoTypeOperatorFunction<T>
+
+Parameters
+----------------
+notifier	(notifications: Observable<void>) => ObservableInput<any>	
+Function that receives an Observable of notifications with which a user can complete or error, aborting the repetition.
+
+Returns
+----------------
+MonoTypeOperatorFunction<T>: A function that returns an Observable that mirrors the source Observable with the exception of a complete.
+
+retryWhen()
+-----------------------------------------------------------------------------------------
+Returns an Observable that mirrors the source Observable with the exception of an error. If the source Observable calls error, this method will emit the Throwable that caused the error to the ObservableInput returned from notifier. If that Observable calls complete or error then this method will call complete or error on the child subscription. Otherwise this method will resubscribe to the source Observable.
+
+Deprecation Notes
+Will be removed in v9 or v10, use retry's delay option instead. Will be removed in v9 or v10. Use retry's delay option instead. Instead of retryWhen(() => notify$), use: retry({ delay: () => notify$ }).
+
+retryWhen<T>(notifier: (errors: Observable<any>) => ObservableInput<any>): MonoTypeOperatorFunction<T>
+
+Parameters
+--------------
+notifier	(errors: Observable<any>) => ObservableInput<any>	
+Function that receives an Observable of notifications with which a user can complete or error, aborting the retry.
+
+Returns
+-------------
+MonoTypeOperatorFunction<T>: A function that returns an Observable that mirrors the source Observable with the exception of an error.
+
+windowWhen()
+-----------------------------------------------------------------------------------------
+
+Branch out the source Observable values as a nested Observable using a factory function of closing Observables to determine when to start a new window.
+
+windowWhen<T>(closingSelector: () => ObservableInput<any>): OperatorFunction<T, Observable<T>>
+Parameters
+closingSelector	() => ObservableInput<any>	
+A function that takes no arguments and returns an ObservableInput (that gets converted to Observable) that signals (on either next or complete) when to close the previous window and start a new one.
+
+Returns
+OperatorFunction<T, Observable<T>>: A function that returns an Observable of windows, which in turn are Observables.
+
+Description
+It's like bufferWhen, but emits a nested Observable instead of an array.
+
+
+Returns an Observable that emits windows of items it collects from the source Observable. The output Observable emits connected, non-overlapping windows. It emits the current window and opens a new one whenever the Observable produced by the specified closingSelector function emits an item. The first window is opened immediately when subscribing to the output Observable.
+
+
+
+delayWhen()
+-----------------------------------------------------------------------------------------
+
+Delays the emission of items from the source Observable by a given time span determined by the emissions of another Observable.
+
+delayWhen(delayDurationSelector: (value: T, index: number) => ObservableInput<any>, subscriptionDelay: Observable<any>): MonoTypeOperatorFunction<T>
+Parameters
+delayDurationSelector	(value: T, index: number) => ObservableInput<any>	
+subscriptionDelay	Observable<any>	
+Returns
+MonoTypeOperatorFunction<T>
+
+delayWhen(delayDurationSelector: (value: T, index: number) => ObservableInput<any>): MonoTypeOperatorFunction<T>
+Parameters
+delayDurationSelector	(value: T, index: number) => ObservableInput<any>	
+Returns
+MonoTypeOperatorFunction<T>
+
+Description
+It's like delay, but the time span of the delay duration is determined by a second Observable.
+
+delayWhen operator shifts each emitted value from the source Observable by a time span determined by another Observable. When the source emits a value, the delayDurationSelector function is called with the value emitted from the source Observable as the first argument to the delayDurationSelector. The delayDurationSelector function should return an ObservableInput, that is internally converted to an Observable that is called the "duration" Observable.
+
+The source value is emitted on the output Observable only when the "duration" Observable emits (nexts) any value. Upon that, the "duration" Observable gets unsubscribed.
+
+Before RxJS V7, the completion of the "duration" Observable would have been triggering the emission of the source value to the output Observable, but with RxJS V7, this is not the case anymore.
+
+Only next notifications (from the "duration" Observable) trigger values from the source Observable to be passed to the output Observable. If the "duration" Observable only emits the complete notification (without next), the value emitted by the source Observable will never get to the output Observable - it will be swallowed. If the "duration" Observable errors, the error will be propagated to the output Observable.
+
+Optionally, delayWhen takes a second argument, subscriptionDelay, which is an Observable. When subscriptionDelay emits its first value or completes, the source Observable is subscribed to and starts behaving like described in the previous paragraph. If subscriptionDelay is not provided, delayWhen will subscribe to the source Observable as soon as the output Observable is subscribed.
+
+
+
+bufferWhen() - collect(Until, When, Count)
+-----------------------------------------------------------------------------------------
+
+bufferWhen<T>(closingSelector: () => ObservableInput<any>): OperatorFunction<T, T[]>
+Parameters
+closingSelector	() => ObservableInput<any>	
+A function that takes no arguments and returns an Observable that signals buffer closure.
+
+Returns
+OperatorFunction<T, T[]>: A function that returns an Observable of arrays of buffered values.
+
+Description
+Collects values from the past as an array. When it starts collecting values, it calls a function that returns an Observable that tells when to close the buffer and restart collecting.
+
+Opens a buffer immediately, then closes the buffer when the observable returned by calling closingSelector function emits a value. When it closes the buffer, it immediately opens a new buffer and repeats the process.
