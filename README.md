@@ -322,12 +322,17 @@ The package scaffold (§5, steps 1–5 and 7) is implemented:
 - `src/migration.ts` + `scripts/generate-migration.mjs` — `MIGRATION.md` generated
   from the catalog (`npm run generate:migration`); a drift test fails when the file
   on disk no longer matches the catalog
-- `tests/` — 30 Vitest tests (marble + subject-driven + catalog consistency +
-  story completeness + migration drift) and compile-time assertions in
-  `tests/type-errors.ts`
+- `tests/` — 35 Vitest tests (marble + subject-driven + catalog consistency +
+  story completeness + migration drift + docs rendering) and compile-time
+  assertions in `tests/type-errors.ts`
 - `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
+- `src/docs.ts` + `scripts/generate-docs.mjs` — the VitePress "Operator Vocabulary"
+  section for `rxjs-vitepress-ds` (`npm run generate:docs [target-dir]`): an
+  overview page with the suffix grammar, 12 family pages rendering every operator
+  as an `ROperatorCard` with its 8-policy story table, an excluded/deprecated
+  page, and the sidebar JSON imported by `.vitepress/config.mts`
 
 Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`,
 `npm run generate:migration`.
 
-Still open from §5: VitePress docs integration (step 9), lint preset (step 10).
+Still open from §5: lint preset (step 10).

@@ -21,7 +21,8 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "generate:migration": "tsx scripts/generate-migration.mjs"
+    "generate:migration": "tsx scripts/generate-migration.mjs",
+    "generate:docs": "tsx scripts/generate-docs.mjs"
   },
   "repository": {
     "type": "git",
