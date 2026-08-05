@@ -14,14 +14,14 @@ export interface DocsPage {
   readonly content: string;
 }
 
-interface DocsGroup {
+export interface DocsGroup {
   readonly slug: string;
   readonly title: string;
   readonly families: readonly string[];
   readonly intro: string;
 }
 
-const GROUPS: readonly DocsGroup[] = [
+export const GROUPS: readonly DocsGroup[] = [
   {
     slug: 'boundaries',
     title: 'Boundaries',
@@ -142,7 +142,7 @@ const ROOT_EXAMPLES: Readonly<Record<string, string>> = {
     'sample(time(1000))    // sampleTime(1000)\\nsample(on(tick$))     // rxjs sample(tick$)\\nsample(count(3))      // last of every 3 - generated',
 };
 
-const exampleFor = (e: CatalogEntry): string | undefined => {
+export const exampleFor = (e: CatalogEntry): string | undefined => {
   switch (e.kind) {
     case 'root':
       return ROOT_EXAMPLES[e.friendly];
@@ -157,7 +157,7 @@ const exampleFor = (e: CatalogEntry): string | undefined => {
   }
 };
 
-const kindLine = (e: CatalogEntry): string => {
+export const kindLine = (e: CatalogEntry): string => {
   switch (e.kind) {
     case 'root':
       return '> **Curried root** — takes a boundary and dispatches to the official operator.';
@@ -172,7 +172,7 @@ const kindLine = (e: CatalogEntry): string => {
   }
 };
 
-const renderStory = (e: CatalogEntry): string[] => {
+export const renderStory = (e: CatalogEntry): string[] => {
   const s = e.story;
   if (!s) return [];
   return [
