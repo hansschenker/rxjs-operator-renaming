@@ -63,6 +63,34 @@ describe('catalog consistency', () => {
     }
   });
 
+  it('every operator entry carries a complete 8-policy story', () => {
+    const needsStory = new Set(['root', 'alias', 'partial', 'wrapper', 'keep']);
+    const policies = [
+      'source',
+      'trigger',
+      'value',
+      'cardinality',
+      'time',
+      'concurrency',
+      'cancellation',
+      'termination',
+    ] as const;
+    for (const entry of catalog) {
+      if (!needsStory.has(entry.kind)) continue;
+      expect(entry.story, `missing story: ${entry.friendly}`).toBeDefined();
+      const story = entry.story;
+      if (!story) continue;
+      for (const policy of policies) {
+        expect(story[policy].length, `${entry.friendly} story.${policy} is empty`).toBeGreaterThan(
+          0,
+        );
+      }
+      expect(Object.keys(story), `${entry.friendly} story has extra or missing policies`).toHaveLength(
+        policies.length,
+      );
+    }
+  });
+
   it('excluded operators never appear as vocabulary exports', () => {
     for (const entry of catalog) {
       if (entry.kind !== 'excluded') continue;

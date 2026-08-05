@@ -1,4 +1,4 @@
-import { catalog, keptOfficialNames } from './catalog';
+import { catalog } from './catalog';
 import type { CatalogEntry } from './catalog';
 
 /**
@@ -31,6 +31,7 @@ export function renderMigration(): string {
     (e): e is CatalogEntry & { official: string } =>
       e.official !== null && (e.kind === 'alias' || e.kind === 'partial' || e.kind === 'wrapper'),
   );
+  const kept = catalog.filter((e) => e.kind === 'keep');
   const excluded = catalog.filter((e) => e.kind === 'excluded');
 
   const officialRows: Row[] = [
@@ -40,11 +41,11 @@ export function renderMigration(): string {
       kind: e.kind,
       notes: notesFor(e),
     })),
-    ...keptOfficialNames.map((name) => ({
-      left: code(name),
-      right: code(name),
+    ...kept.map((e) => ({
+      left: code(e.official ?? e.friendly),
+      right: code(e.friendly),
       kind: 'keep',
-      notes: 'Official name already obeys the suffix grammar.',
+      notes: e.behavior,
     })),
     ...excluded.map((e) => ({
       left: code(e.official ?? e.friendly),
@@ -54,29 +55,22 @@ export function renderMigration(): string {
     })),
   ].sort((a, b) => a.left.localeCompare(b.left));
 
-  const friendlyRows: Row[] = [
-    ...catalog
-      .filter((e) => e.kind !== 'excluded')
-      .map((e) => ({
-        left: code(e.friendly),
-        right: e.official === null ? '—' : code(e.official),
-        kind: e.kind,
-        notes: notesFor(e),
-      })),
-    ...keptOfficialNames.map((name) => ({
-      left: code(name),
-      right: code(name),
-      kind: 'keep',
-      notes: 'Re-exported unchanged.',
-    })),
-  ].sort((a, b) => a.left.localeCompare(b.left));
+  const friendlyRows: Row[] = catalog
+    .filter((e) => e.kind !== 'excluded')
+    .map((e) => ({
+      left: code(e.friendly),
+      right: e.official === null ? '—' : code(e.official),
+      kind: e.kind,
+      notes: notesFor(e),
+    }))
+    .sort((a, b) => a.left.localeCompare(b.left));
 
   const lines: string[] = [
     '# Migration Tables',
     '',
     '> Generated from `src/catalog.ts` by `npm run generate:migration` — do not edit by hand.',
     '',
-    `Summary: ${renamed.length} renamed, ${keptOfficialNames.length} kept, ${excluded.length} excluded.`,
+    `Summary: ${renamed.length} renamed, ${kept.length} kept, ${excluded.length} excluded.`,
     '',
     '## Official → vocabulary',
     '',

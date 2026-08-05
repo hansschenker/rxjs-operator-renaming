@@ -9,48 +9,48 @@ Summary: 17 renamed, 51 kept, 15 excluded.
 | Official (rxjs) | Vocabulary | Kind | Notes |
 | --- | --- | --- | --- |
 | `audit` | `auditWhen` | partial | `audit(when(make))` — Suppresses while the signal you created runs, then emits the latest value. |
-| `auditTime` | `auditTime` | keep | Official name already obeys the suffix grammar. |
+| `auditTime` | `auditTime` | keep | Suppresses for a fixed window, then emits the latest value. |
 | `buffer` | `bufferOn` | partial | `buffer(on(signal$))` — Flushes the collected array each time the signal emits. |
-| `bufferCount` | `bufferCount` | keep | Official name already obeys the suffix grammar. |
-| `bufferTime` | `bufferTime` | keep | Official name already obeys the suffix grammar. |
-| `bufferToggle` | `bufferToggle` | keep | Official name already obeys the suffix grammar. |
-| `bufferWhen` | `bufferWhen` | keep | Official name already obeys the suffix grammar. |
-| `catchError` | `catchError` | keep | Official name already obeys the suffix grammar. |
-| `concatAll` | `concatAll` | keep | Official name already obeys the suffix grammar. |
-| `concatMap` | `concatMap` | keep | Official name already obeys the suffix grammar. |
+| `bufferCount` | `bufferCount` | keep | Collects values into arrays of N. |
+| `bufferTime` | `bufferTime` | keep | Collects values into arrays over fixed durations. |
+| `bufferToggle` | `bufferToggle` | keep | Collects values between open and close signals. |
+| `bufferWhen` | `bufferWhen` | keep | Collects values until a created closing signal fires. |
+| `catchError` | `catchError` | keep | Replaces a failed stream with a recovery observable. |
+| `concatAll` | `concatAll` | keep | Flattens inner observables sequentially. |
+| `concatMap` | `concatMap` | keep | Maps to inner observables and runs them one after another (queue). |
 | `concatMapTo` | — | excluded | Use concatMap(() => inner$). |
 | `count` | `countOnComplete` | alias | Counts values; emits the total when the source completes. |
 | `debounce` | `debounceWhen` | partial | `debounce(when(make))` — Emits a value once the signal you create for it fires without a newer value arriving. |
-| `debounceTime` | `debounceTime` | keep | Official name already obeys the suffix grammar. |
-| `delay` | `delay` | keep | Official name already obeys the suffix grammar. |
-| `delayWhen` | `delayWhen` | keep | Official name already obeys the suffix grammar. |
-| `distinct` | `distinct` | keep | Official name already obeys the suffix grammar. |
+| `debounceTime` | `debounceTime` | keep | Emits the latest value after a fixed silence. |
+| `delay` | `delay` | keep | Shifts every value later by a fixed duration. |
+| `delayWhen` | `delayWhen` | keep | Delays each value until its own signal fires. |
+| `distinct` | `distinct` | keep | Emits only values never seen before in the whole stream. |
 | `distinctUntilChanged` | `distinctFromPrevious` | alias | Drops only consecutive duplicates — compares with the previous value. |
 | `distinctUntilKeyChanged` | `distinctFromPreviousBy` | alias | Drops consecutive duplicates compared by a selected key. |
-| `elementAt` | `elementAt` | keep | Official name already obeys the suffix grammar. |
-| `endWith` | `endWith` | keep | Official name already obeys the suffix grammar. |
-| `exhaustAll` | `exhaustAll` | keep | Official name already obeys the suffix grammar. |
-| `exhaustMap` | `exhaustMap` | keep | Official name already obeys the suffix grammar. |
-| `expand` | `expand` | keep | Official name already obeys the suffix grammar. |
-| `filter` | `filter` | keep | Official name already obeys the suffix grammar. |
-| `finalize` | `finalize` | keep | Official name already obeys the suffix grammar. |
-| `find` | `find` | keep | Official name already obeys the suffix grammar. |
-| `findIndex` | `findIndex` | keep | Official name already obeys the suffix grammar. |
-| `first` | `first` | keep | Official name already obeys the suffix grammar. |
+| `elementAt` | `elementAt` | keep | Emits the value at the given index. |
+| `endWith` | `endWith` | keep | Appends final values on completion. |
+| `exhaustAll` | `exhaustAll` | keep | Flattens the first inner observable, ignoring others while busy. |
+| `exhaustMap` | `exhaustMap` | keep | Maps to inner observables, ignoring new values while busy. |
+| `expand` | `expand` | keep | Recursively feeds produced values back into the projection. |
+| `filter` | `filter` | keep | Lets only matching values through. |
+| `finalize` | `finalize` | keep | Runs a callback on completion, error, or unsubscribe. |
+| `find` | `find` | keep | Emits the first value satisfying the predicate. |
+| `findIndex` | `findIndex` | keep | Emits the index of the first match. |
+| `first` | `first` | keep | Emits the first (matching) value, then completes. |
 | `forkJoin` | `whenAllReady` | alias | Waits for all inputs to complete, then emits their last values once. |
-| `groupBy` | `groupBy` | keep | Official name already obeys the suffix grammar. |
+| `groupBy` | `groupBy` | keep | Splits the stream into keyed substreams. |
 | `ignoreElements` | `ignoreValues` | alias | Drops all values but keeps error and completion. |
-| `last` | `last` | keep | Official name already obeys the suffix grammar. |
-| `map` | `map` | keep | Official name already obeys the suffix grammar. |
+| `last` | `last` | keep | Emits the final (matching) value on completion. |
+| `map` | `map` | keep | Transforms each value. |
 | `mapTo` | — | excluded | Use map(() => value). |
 | `max` | `maxOnComplete` | alias | Emits the largest value when the source completes. |
-| `mergeAll` | `mergeAll` | keep | Official name already obeys the suffix grammar. |
-| `mergeMap` | `mergeMap` | keep | Official name already obeys the suffix grammar. |
+| `mergeAll` | `mergeAll` | keep | Flattens inner observables concurrently. |
+| `mergeMap` | `mergeMap` | keep | Maps to inner observables and runs them concurrently. |
 | `mergeMapTo` | — | excluded | Use mergeMap(() => inner$). |
-| `mergeScan` | `mergeScan` | keep | Official name already obeys the suffix grammar. |
+| `mergeScan` | `mergeScan` | keep | Accumulates state through overlapping async updates. |
 | `min` | `minOnComplete` | alias | Emits the smallest value when the source completes. |
 | `multicast` | — | excluded | Use share with a connector. |
-| `pairwise` | `pairwise` | keep | Official name already obeys the suffix grammar. |
+| `pairwise` | `pairwise` | keep | Emits [previous, current] pairs. |
 | `pluck` | — | excluded | Use map with property access. |
 | `publish` | — | excluded | Use share or connectable. |
 | `publishBehavior` | — | excluded | Use share with a BehaviorSubject connector. |
@@ -59,38 +59,38 @@ Summary: 17 renamed, 51 kept, 15 excluded.
 | `reduce` | `reduceOnComplete` | alias | Folds all values; emits the single result when the source completes. |
 | `refCount` | — | excluded | Use share({ resetOnRefCountZero }). |
 | `repeatWhen` | — | excluded | Use repeat({ delay }). |
-| `retry` | `retry` | keep | Official name already obeys the suffix grammar. |
+| `retry` | `retry` | keep | Resubscribes after errors per the retry policy. |
 | `retryWhen` | — | excluded | Use retry({ delay }). |
 | `sample` | `sampleOn` | partial | `sample(on(signal$))` — Emits the latest source value each time the signal emits. |
-| `sampleTime` | `sampleTime` | keep | Official name already obeys the suffix grammar. |
-| `scan` | `scan` | keep | Official name already obeys the suffix grammar. |
-| `share` | `share` | keep | Official name already obeys the suffix grammar. |
+| `sampleTime` | `sampleTime` | keep | Periodically emits the latest value. |
+| `scan` | `scan` | keep | Emits the running accumulator state for every value. |
+| `share` | `share` | keep | Shares one subscription among all subscribers. |
 | `shareReplay` | `shareLatest` | wrapper | `shareReplay({ bufferSize: 1, refCount: true })` — Shares one subscription and replays the latest value to late subscribers. |
-| `single` | `single` | keep | Official name already obeys the suffix grammar. |
-| `skipLast` | `skipLast` | keep | Official name already obeys the suffix grammar. |
-| `skipUntil` | `skipUntil` | keep | Official name already obeys the suffix grammar. |
-| `skipWhile` | `skipWhile` | keep | Official name already obeys the suffix grammar. |
-| `startWith` | `startWith` | keep | Official name already obeys the suffix grammar. |
-| `switchAll` | `switchAll` | keep | Official name already obeys the suffix grammar. |
-| `switchMap` | `switchMap` | keep | Official name already obeys the suffix grammar. |
+| `single` | `single` | keep | Requires exactly one matching value, errors otherwise. |
+| `skipLast` | `skipLast` | keep | Forwards all but the final N values. |
+| `skipUntil` | `skipUntil` | keep | Drops values until the notifier emits, then forwards. |
+| `skipWhile` | `skipWhile` | keep | Drops values while the predicate holds, then forwards everything. |
+| `startWith` | `startWith` | keep | Prepends initial values. |
+| `switchAll` | `switchAll` | keep | Flattens by always switching to the latest inner observable. |
+| `switchMap` | `switchMap` | keep | Maps to inner observables, cancelling the previous one (keep latest). |
 | `switchMapTo` | — | excluded | Use switchMap(() => inner$). |
-| `switchScan` | `switchScan` | keep | Official name already obeys the suffix grammar. |
+| `switchScan` | `switchScan` | keep | Accumulates state; only the latest async update survives. |
 | `takeLast` | `takeLastOnComplete` | alias | Buffers the last N values; emits them when the source completes. |
-| `takeUntil` | `takeUntil` | keep | Official name already obeys the suffix grammar. |
-| `takeWhile` | `takeWhile` | keep | Official name already obeys the suffix grammar. |
-| `tap` | `tap` | keep | Official name already obeys the suffix grammar. |
+| `takeUntil` | `takeUntil` | keep | Forwards values until the notifier emits, then completes. |
+| `takeWhile` | `takeWhile` | keep | Keeps values while the predicate holds, then completes. |
+| `tap` | `tap` | keep | Runs side effects without changing the stream. |
 | `throttle` | `throttleWhen` | partial | `throttle(when(make))` — Emits a value, then suppresses until the signal you created for it fires. |
-| `throttleTime` | `throttleTime` | keep | Official name already obeys the suffix grammar. |
-| `timeout` | `timeout` | keep | Official name already obeys the suffix grammar. |
+| `throttleTime` | `throttleTime` | keep | Emits a value, then suppresses for a fixed duration. |
+| `timeout` | `timeout` | keep | Errors (or falls back) if the source is too slow. |
 | `timeoutWith` | — | excluded | Use timeout({ with }). |
 | `toArray` | `toArrayOnComplete` | alias | Collects all values into one array; emits it when the source completes. |
 | `toPromise` | — | excluded | Use firstValueFrom or lastValueFrom. |
 | `window` | `windowOn` | partial | `window(on(signal$))` — Closes the current window and opens a new one each time the signal emits. |
-| `windowCount` | `windowCount` | keep | Official name already obeys the suffix grammar. |
-| `windowTime` | `windowTime` | keep | Official name already obeys the suffix grammar. |
-| `windowToggle` | `windowToggle` | keep | Official name already obeys the suffix grammar. |
-| `windowWhen` | `windowWhen` | keep | Official name already obeys the suffix grammar. |
-| `withLatestFrom` | `withLatestFrom` | keep | Official name already obeys the suffix grammar. |
+| `windowCount` | `windowCount` | keep | Routes values into inner observable windows of N. |
+| `windowTime` | `windowTime` | keep | Routes values into inner observable windows over fixed durations. |
+| `windowToggle` | `windowToggle` | keep | Opens windows between open and close signals. |
+| `windowWhen` | `windowWhen` | keep | Opens a window until a created closing signal fires, then the next. |
+| `withLatestFrom` | `withLatestFrom` | keep | Pairs each primary value with the latest values of other streams. |
 
 ## Vocabulary → official
 
@@ -101,75 +101,75 @@ suffix grammar).
 | Vocabulary | Official (rxjs) | Kind | Notes |
 | --- | --- | --- | --- |
 | `audit` | — | root | Suppress during the window, emit the latest when it closes: time or when. |
-| `auditTime` | `auditTime` | keep | Re-exported unchanged. |
+| `auditTime` | `auditTime` | keep | Suppresses for a fixed window, then emits the latest value. |
 | `auditWhen` | `audit` | partial | `audit(when(make))` — Suppresses while the signal you created runs, then emits the latest value. |
 | `buffer` | — | root | Collect values into arrays; flush per boundary: time, count, on, when, toggle. |
-| `bufferCount` | `bufferCount` | keep | Re-exported unchanged. |
+| `bufferCount` | `bufferCount` | keep | Collects values into arrays of N. |
 | `bufferOn` | `buffer` | partial | `buffer(on(signal$))` — Flushes the collected array each time the signal emits. |
-| `bufferTime` | `bufferTime` | keep | Re-exported unchanged. |
-| `bufferToggle` | `bufferToggle` | keep | Re-exported unchanged. |
-| `bufferWhen` | `bufferWhen` | keep | Re-exported unchanged. |
-| `catchError` | `catchError` | keep | Re-exported unchanged. |
-| `concatAll` | `concatAll` | keep | Re-exported unchanged. |
-| `concatMap` | `concatMap` | keep | Re-exported unchanged. |
+| `bufferTime` | `bufferTime` | keep | Collects values into arrays over fixed durations. |
+| `bufferToggle` | `bufferToggle` | keep | Collects values between open and close signals. |
+| `bufferWhen` | `bufferWhen` | keep | Collects values until a created closing signal fires. |
+| `catchError` | `catchError` | keep | Replaces a failed stream with a recovery observable. |
+| `concatAll` | `concatAll` | keep | Flattens inner observables sequentially. |
+| `concatMap` | `concatMap` | keep | Maps to inner observables and runs them one after another (queue). |
 | `count` | — | boundary | A fixed number of values drives the boundary (reserved for boundaries; the rxjs aggregate is countOnComplete). |
 | `countOnComplete` | `count` | alias | Counts values; emits the total when the source completes. |
 | `debounce` | — | root | Emit the latest value after silence: time (fixed) or when (per-value signal). |
-| `debounceTime` | `debounceTime` | keep | Re-exported unchanged. |
+| `debounceTime` | `debounceTime` | keep | Emits the latest value after a fixed silence. |
 | `debounceWhen` | `debounce` | partial | `debounce(when(make))` — Emits a value once the signal you create for it fires without a newer value arriving. |
-| `delay` | `delay` | keep | Re-exported unchanged. |
-| `delayWhen` | `delayWhen` | keep | Re-exported unchanged. |
-| `distinct` | `distinct` | keep | Re-exported unchanged. |
+| `delay` | `delay` | keep | Shifts every value later by a fixed duration. |
+| `delayWhen` | `delayWhen` | keep | Delays each value until its own signal fires. |
+| `distinct` | `distinct` | keep | Emits only values never seen before in the whole stream. |
 | `distinctFromPrevious` | `distinctUntilChanged` | alias | Drops only consecutive duplicates — compares with the previous value. |
 | `distinctFromPreviousBy` | `distinctUntilKeyChanged` | alias | Drops consecutive duplicates compared by a selected key. |
-| `elementAt` | `elementAt` | keep | Re-exported unchanged. |
-| `endWith` | `endWith` | keep | Re-exported unchanged. |
-| `exhaustAll` | `exhaustAll` | keep | Re-exported unchanged. |
-| `exhaustMap` | `exhaustMap` | keep | Re-exported unchanged. |
-| `expand` | `expand` | keep | Re-exported unchanged. |
-| `filter` | `filter` | keep | Re-exported unchanged. |
-| `finalize` | `finalize` | keep | Re-exported unchanged. |
-| `find` | `find` | keep | Re-exported unchanged. |
-| `findIndex` | `findIndex` | keep | Re-exported unchanged. |
-| `first` | `first` | keep | Re-exported unchanged. |
-| `groupBy` | `groupBy` | keep | Re-exported unchanged. |
+| `elementAt` | `elementAt` | keep | Emits the value at the given index. |
+| `endWith` | `endWith` | keep | Appends final values on completion. |
+| `exhaustAll` | `exhaustAll` | keep | Flattens the first inner observable, ignoring others while busy. |
+| `exhaustMap` | `exhaustMap` | keep | Maps to inner observables, ignoring new values while busy. |
+| `expand` | `expand` | keep | Recursively feeds produced values back into the projection. |
+| `filter` | `filter` | keep | Lets only matching values through. |
+| `finalize` | `finalize` | keep | Runs a callback on completion, error, or unsubscribe. |
+| `find` | `find` | keep | Emits the first value satisfying the predicate. |
+| `findIndex` | `findIndex` | keep | Emits the index of the first match. |
+| `first` | `first` | keep | Emits the first (matching) value, then completes. |
+| `groupBy` | `groupBy` | keep | Splits the stream into keyed substreams. |
 | `ignoreValues` | `ignoreElements` | alias | Drops all values but keeps error and completion. |
-| `last` | `last` | keep | Re-exported unchanged. |
-| `map` | `map` | keep | Re-exported unchanged. |
+| `last` | `last` | keep | Emits the final (matching) value on completion. |
+| `map` | `map` | keep | Transforms each value. |
 | `maxOnComplete` | `max` | alias | Emits the largest value when the source completes. |
-| `mergeAll` | `mergeAll` | keep | Re-exported unchanged. |
-| `mergeMap` | `mergeMap` | keep | Re-exported unchanged. |
-| `mergeScan` | `mergeScan` | keep | Re-exported unchanged. |
+| `mergeAll` | `mergeAll` | keep | Flattens inner observables concurrently. |
+| `mergeMap` | `mergeMap` | keep | Maps to inner observables and runs them concurrently. |
+| `mergeScan` | `mergeScan` | keep | Accumulates state through overlapping async updates. |
 | `minOnComplete` | `min` | alias | Emits the smallest value when the source completes. |
 | `on` | — | boundary | Act each time the notifier emits — repeating trigger. |
-| `pairwise` | `pairwise` | keep | Re-exported unchanged. |
+| `pairwise` | `pairwise` | keep | Emits [previous, current] pairs. |
 | `reduceOnComplete` | `reduce` | alias | Folds all values; emits the single result when the source completes. |
-| `retry` | `retry` | keep | Re-exported unchanged. |
+| `retry` | `retry` | keep | Resubscribes after errors per the retry policy. |
 | `sample` | — | root | Emit the latest value on a trigger: time (interval) or on (signal). |
 | `sampleOn` | `sample` | partial | `sample(on(signal$))` — Emits the latest source value each time the signal emits. |
-| `sampleTime` | `sampleTime` | keep | Re-exported unchanged. |
-| `scan` | `scan` | keep | Re-exported unchanged. |
-| `share` | `share` | keep | Re-exported unchanged. |
+| `sampleTime` | `sampleTime` | keep | Periodically emits the latest value. |
+| `scan` | `scan` | keep | Emits the running accumulator state for every value. |
+| `share` | `share` | keep | Shares one subscription among all subscribers. |
 | `shareLatest` | `shareReplay` | wrapper | `shareReplay({ bufferSize: 1, refCount: true })` — Shares one subscription and replays the latest value to late subscribers. |
-| `single` | `single` | keep | Re-exported unchanged. |
+| `single` | `single` | keep | Requires exactly one matching value, errors otherwise. |
 | `skip` | — | root | Drop values while the boundary holds: count, whileTrue, until, time. |
-| `skipLast` | `skipLast` | keep | Re-exported unchanged. |
-| `skipUntil` | `skipUntil` | keep | Re-exported unchanged. |
-| `skipWhile` | `skipWhile` | keep | Re-exported unchanged. |
-| `startWith` | `startWith` | keep | Re-exported unchanged. |
-| `switchAll` | `switchAll` | keep | Re-exported unchanged. |
-| `switchMap` | `switchMap` | keep | Re-exported unchanged. |
-| `switchScan` | `switchScan` | keep | Re-exported unchanged. |
+| `skipLast` | `skipLast` | keep | Forwards all but the final N values. |
+| `skipUntil` | `skipUntil` | keep | Drops values until the notifier emits, then forwards. |
+| `skipWhile` | `skipWhile` | keep | Drops values while the predicate holds, then forwards everything. |
+| `startWith` | `startWith` | keep | Prepends initial values. |
+| `switchAll` | `switchAll` | keep | Flattens by always switching to the latest inner observable. |
+| `switchMap` | `switchMap` | keep | Maps to inner observables, cancelling the previous one (keep latest). |
+| `switchScan` | `switchScan` | keep | Accumulates state; only the latest async update survives. |
 | `take` | — | root | Keep values as long as the boundary allows: count, whileTrue, until, time. |
 | `takeLastOnComplete` | `takeLast` | alias | Buffers the last N values; emits them when the source completes. |
-| `takeUntil` | `takeUntil` | keep | Re-exported unchanged. |
-| `takeWhile` | `takeWhile` | keep | Re-exported unchanged. |
-| `tap` | `tap` | keep | Re-exported unchanged. |
+| `takeUntil` | `takeUntil` | keep | Forwards values until the notifier emits, then completes. |
+| `takeWhile` | `takeWhile` | keep | Keeps values while the predicate holds, then completes. |
+| `tap` | `tap` | keep | Runs side effects without changing the stream. |
 | `throttle` | — | root | Emit, then suppress during the window: time (fixed) or when (per-value signal). |
-| `throttleTime` | `throttleTime` | keep | Re-exported unchanged. |
+| `throttleTime` | `throttleTime` | keep | Emits a value, then suppresses for a fixed duration. |
 | `throttleWhen` | `throttle` | partial | `throttle(when(make))` — Emits a value, then suppresses until the signal you created for it fires. |
 | `time` | — | boundary | A fixed clock duration drives the boundary. |
-| `timeout` | `timeout` | keep | Re-exported unchanged. |
+| `timeout` | `timeout` | keep | Errors (or falls back) if the source is too slow. |
 | `toArrayOnComplete` | `toArray` | alias | Collects all values into one array; emits it when the source completes. |
 | `toggle` | — | boundary | Act between explicit open and close signals. |
 | `until` | — | boundary | A notifier observable ends it — terminal, fires once. |
@@ -177,9 +177,9 @@ suffix grammar).
 | `whenAllReady` | `forkJoin` | alias | Waits for all inputs to complete, then emits their last values once. |
 | `whileTrue` | — | boundary | Continue as long as the predicate holds. |
 | `window` | — | root | Route values into inner observables; open and close per boundary: time, count, on, when, toggle. |
-| `windowCount` | `windowCount` | keep | Re-exported unchanged. |
+| `windowCount` | `windowCount` | keep | Routes values into inner observable windows of N. |
 | `windowOn` | `window` | partial | `window(on(signal$))` — Closes the current window and opens a new one each time the signal emits. |
-| `windowTime` | `windowTime` | keep | Re-exported unchanged. |
-| `windowToggle` | `windowToggle` | keep | Re-exported unchanged. |
-| `windowWhen` | `windowWhen` | keep | Re-exported unchanged. |
-| `withLatestFrom` | `withLatestFrom` | keep | Re-exported unchanged. |
+| `windowTime` | `windowTime` | keep | Routes values into inner observable windows over fixed durations. |
+| `windowToggle` | `windowToggle` | keep | Opens windows between open and close signals. |
+| `windowWhen` | `windowWhen` | keep | Opens a window until a created closing signal fires, then the next. |
+| `withLatestFrom` | `withLatestFrom` | keep | Pairs each primary value with the latest values of other streams. |

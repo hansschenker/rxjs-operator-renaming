@@ -314,16 +314,20 @@ The package scaffold (§5, steps 1–5 and 7) is implemented:
   applications (`bufferOn`, `sampleOn`, `debounceWhen`, …)
 - `src/wrappers.ts` — `shareLatest`
 - `src/kept.ts` — grammar-conform official names re-exported for one-stop imports
-- `src/catalog.ts` — the single source of truth (`catalog`, `keptOfficialNames`)
+- `src/catalog.ts` — the single source of truth (`catalog`, derived
+  `keptOfficialNames`); every operator entry (roots, aliases, partials, wrapper,
+  and all kept names) carries its structured 8-policy operator story
+  (Source → Trigger → Value → Cardinality → Time → Concurrency → Cancellation →
+  Termination), enforced by a completeness test
 - `src/migration.ts` + `scripts/generate-migration.mjs` — `MIGRATION.md` generated
   from the catalog (`npm run generate:migration`); a drift test fails when the file
   on disk no longer matches the catalog
-- `tests/` — 29 Vitest tests (marble + subject-driven + catalog consistency +
-  migration drift) and compile-time assertions in `tests/type-errors.ts`
+- `tests/` — 30 Vitest tests (marble + subject-driven + catalog consistency +
+  story completeness + migration drift) and compile-time assertions in
+  `tests/type-errors.ts`
 - `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
 
 Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`,
 `npm run generate:migration`.
 
-Still open from §5: operator stories in the catalog (step 6), VitePress docs
-integration (step 9), lint preset (step 10).
+Still open from §5: VitePress docs integration (step 9), lint preset (step 10).
