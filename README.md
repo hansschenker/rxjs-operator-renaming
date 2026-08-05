@@ -300,3 +300,26 @@ outside the grammar (their `On` refers to a scheduler, not a signal).
 - Curried roots **dispatch** to official operators instead of reimplementing them;
   the `map + All` and `reduce` derivations (§3.4, §3.5) are teaching material, with
   pure re-exports used wherever behavioral fidelity matters.
+
+## 7. Status
+
+The package scaffold (§5, steps 1–5 and 7) is implemented:
+
+- `src/boundaries.ts` — the suffix combinators (`time`, `count`, `whileTrue`,
+  `until`, `on`, `when`, `toggle`) as a tagged discriminated union
+- `src/roots.ts` — curried roots (`take`, `skip`, `buffer`, `window`, `debounce`,
+  `throttle`, `audit`, `sample`) dispatching to the official operators, including
+  the generated `take(time(ms))` / `skip(time(ms))`
+- `src/operators.ts` — renamed aliases (pure re-exports) + named partial
+  applications (`bufferOn`, `sampleOn`, `debounceWhen`, …)
+- `src/wrappers.ts` — `shareLatest`
+- `src/kept.ts` — grammar-conform official names re-exported for one-stop imports
+- `src/catalog.ts` — the single source of truth (`catalog`, `keptOfficialNames`)
+- `tests/` — 27 Vitest tests (marble + subject-driven + catalog consistency) and
+  compile-time assertions in `tests/type-errors.ts`
+- `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
+
+Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`.
+
+Still open from §5: operator stories in the catalog (step 6), generated
+`MIGRATION.md` (step 8), VitePress docs integration (step 9), lint preset (step 10).
