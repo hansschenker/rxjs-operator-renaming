@@ -44,6 +44,11 @@
     --rename-mid: #c99425;
     --rename-hi: #8e6108;
     --rename-ink: #241800;
+
+    --teal-lo: #5fcec2;
+    --teal-mid: #29a496;
+    --teal-hi: #146a60;
+    --teal-ink: #06231f;
   }
 
   :root[data-theme="dark"] {
@@ -106,6 +111,16 @@
     color: var(--ink);
   }
 
+  h2 {
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
   .dek {
     max-width: 68ch;
     color: var(--ink-soft);
@@ -114,6 +129,37 @@
   }
 
   .dek b { color: var(--ink); }
+
+  .dek code {
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.92em;
+    background: var(--surface);
+    border: 1px solid var(--grid);
+    border-radius: 3px;
+    padding: 0.05em 0.35em;
+    color: var(--ink);
+  }
+
+  .section-rule {
+    border: none;
+    border-top: 2px solid var(--grid);
+    margin: 3rem 0 2.2rem;
+  }
+
+  .footnote {
+    margin-top: 1.4rem;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    max-width: 68ch;
+  }
+
+  .footnote code {
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    background: var(--surface);
+    border: 1px solid var(--grid);
+    border-radius: 3px;
+    padding: 0.05em 0.35em;
+  }
 
   /* ---------- stat strip ---------- */
   .stats {
@@ -274,6 +320,11 @@
     color: var(--navy-ink);
   }
 
+  .plaque.teal {
+    background: linear-gradient(180deg, var(--teal-lo) 0%, var(--teal-mid) 55%, var(--teal-hi) 100%);
+    color: var(--teal-ink);
+  }
+
   .plaque.corner {
     background: linear-gradient(180deg, var(--corner-lo) 0%, var(--corner-mid) 55%, var(--corner-hi) 100%);
     color: #f2efe9;
@@ -403,8 +454,10 @@
 
   .cell.invalid {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.25rem;
     min-height: 5.6rem;
     background: repeating-linear-gradient(
       135deg,
@@ -420,6 +473,14 @@
     font-size: 0.62rem;
     font-weight: 600;
     color: var(--ink-faint);
+  }
+
+  .cell.invalid .missing-name {
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-weight: 400;
+    text-decoration: line-through;
+    text-decoration-color: var(--ink-faint);
+    opacity: 0.85;
   }
 
   footer {
@@ -469,8 +530,40 @@
     </div>
   </div>
 
+  <hr class="section-rule">
+
+  <p class="eyebrow">companion grid · src/kept.ts</p>
+  <h2>The Flattening Family — Map / All / Scan × Strategy</h2>
+  <p class="dek">
+    Concurrency strategy is a second, closed vocabulary — orthogonal to the boundary
+    grammar above, not an eighth column on it. A boundary is a tag a root switches on
+    in one dispatch call; a strategy only means something once you already have a
+    higher-order stream, so it combines with <b>map</b>
+    (<code>map(project) → xAll()</code>, the flattening law) or drives a bare
+    flatten/scan directly — it never dispatches through <b>take</b>, <b>buffer</b>,
+    or any root above. These ten names are the sacred core of the vocabulary:
+    <b>nothing here is renamed</b>.
+  </p>
+
+  <div class="stats" id="strategy-stats"></div>
+  <div class="legend" id="strategy-legend"></div>
+
+  <p class="axis-x">X-Axis — Strategy</p>
+  <div class="board-row">
+    <p class="axis-y">Y-Axis — Family</p>
+    <div class="matrix-scroll">
+      <table id="strategy-matrix" aria-label="Map, All, and Scan by concurrency strategy"></table>
+    </div>
+  </div>
+
+  <p class="footnote">
+    <code>expand</code> sits outside this grid on purpose — it recursively re-feeds
+    its own output back into the projection with a fixed, merge-like concurrency, so
+    it isn't parameterized by strategy the way the rest of this family is.
+  </p>
+
   <footer>
-    <span>Source: <code>src/boundaries.ts</code>, <code>src/roots.ts</code>, <code>src/catalog.ts</code></span>
+    <span>Source: <code>src/boundaries.ts</code>, <code>src/roots.ts</code>, <code>src/kept.ts</code>, <code>src/catalog.ts</code></span>
     <span>See also: <code>docs/rxjs-operator-naming-algebra.md</code></span>
   </footer>
 </div>
@@ -645,6 +738,133 @@
     { cls: "invalid", label: "blocked", desc: `outside the root's boundary union (${total - validCount})` },
   ];
   legend.innerHTML = legendDefs
+    .map(
+      (l) =>
+        `<span class="legend-item"><span class="swatch ${l.cls}"></span><b>${l.label}</b><span class="desc">${l.desc}</span></span>`
+    )
+    .join("");
+
+  // ---------- companion grid: Map / All / Scan × Strategy ----------
+
+  const STRATEGIES = [
+    { key: "concat", label: "concat", policy: "queue in order" },
+    { key: "switch", label: "switch", policy: "keep latest" },
+    { key: "merge", label: "merge", policy: "run concurrently" },
+    { key: "exhaust", label: "exhaust", policy: "ignore while busy" },
+  ];
+
+  const FAMILIES = [
+    { key: "Map", label: "Map" },
+    { key: "All", label: "All" },
+    { key: "Scan", label: "Scan" },
+  ];
+
+  const STRATEGY_CELLS = {
+    Map: {
+      concat: { composed: "concatMap(project)", target: "map(project) → concatAll()" },
+      switch: { composed: "switchMap(project)", target: "map(project) → switchAll()" },
+      merge: { composed: "mergeMap(project, concurrent?)", target: "map(project) → mergeAll(concurrent?)" },
+      exhaust: { composed: "exhaustMap(project)", target: "map(project) → exhaustAll()" },
+    },
+    All: {
+      concat: { composed: "concatAll()", target: "flattens inner sources in order, queued" },
+      switch: { composed: "switchAll()", target: "flattens the latest inner source, cancels prior" },
+      merge: { composed: "mergeAll(concurrent?)", target: "flattens inner sources concurrently" },
+      exhaust: { composed: "exhaustAll()", target: "flattens the first inner source, drops the rest" },
+    },
+    Scan: {
+      switch: { composed: "switchScan(accumulator, seed)", target: "only the latest async update survives" },
+      merge: { composed: "mergeScan(accumulator, seed, concurrent?)", target: "overlapping async updates all merge in" },
+    },
+  };
+
+  function buildStrategyHead() {
+    const thead = document.createElement("thead");
+    const tr = document.createElement("tr");
+
+    const corner = document.createElement("th");
+    corner.className = "corner";
+    corner.innerHTML = '<span class="plaque corner"><span class="bname">family ／ strategy</span></span>';
+    tr.appendChild(corner);
+
+    for (const s of STRATEGIES) {
+      const th = document.createElement("th");
+      th.scope = "col";
+      th.innerHTML = `<span class="plaque teal mono"><span class="bname">[${s.label}]</span><span class="barg">${s.policy}</span></span>`;
+      tr.appendChild(th);
+    }
+    thead.appendChild(tr);
+    return thead;
+  }
+
+  function buildStrategyBody() {
+    const tbody = document.createElement("tbody");
+    let officialCount = 0;
+
+    for (const f of FAMILIES) {
+      const tr = document.createElement("tr");
+      const rowCells = STRATEGY_CELLS[f.key] || {};
+      const acceptedCount = Object.keys(rowCells).length;
+      officialCount += acceptedCount;
+
+      const rowHeader = document.createElement("th");
+      rowHeader.scope = "row";
+      rowHeader.innerHTML = `<span class="plaque navy mono"><span class="bname">[${f.label}]</span><span class="barg">${acceptedCount}/${STRATEGIES.length}</span></span>`;
+      tr.appendChild(rowHeader);
+
+      for (const s of STRATEGIES) {
+        const td = document.createElement("td");
+        const entry = rowCells[s.key];
+
+        if (!entry) {
+          const missingName = `${s.key}${f.key}`;
+          td.innerHTML = `
+            <div class="cell invalid" title="RxJS ships no ${missingName}() — a gap in the library itself, not a rule this vocabulary enforces">
+              <span>— not in RxJS —</span>
+              <span class="missing-name">${missingName}()</span>
+            </div>`;
+        } else {
+          td.innerHTML = `
+            <div class="cell valid">
+              <span class="composed">${entry.composed}</span>
+              <span class="target">≡ ${entry.target}</span>
+              <div class="flag keep">
+                <span class="flag-label">official</span>
+                <span class="flag-note">Ships unchanged in RxJS — never renamed</span>
+              </div>
+            </div>`;
+        }
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+    return { tbody, officialCount };
+  }
+
+  const strategyTable = document.getElementById("strategy-matrix");
+  strategyTable.appendChild(buildStrategyHead());
+  const { tbody: strategyTbody, officialCount } = buildStrategyBody();
+  strategyTable.appendChild(strategyTbody);
+
+  const strategyTotal = FAMILIES.length * STRATEGIES.length;
+
+  const strategyStats = document.getElementById("strategy-stats");
+  const strategyStatDefs = [
+    { n: FAMILIES.length, label: "families" },
+    { n: STRATEGIES.length, label: "strategies" },
+    { n: `${officialCount}<small>/${strategyTotal}</small>`, label: "official pairs" },
+    { n: strategyTotal - officialCount, label: "not in RxJS" },
+  ];
+  strategyStats.innerHTML = strategyStatDefs
+    .map((s) => `<div class="stat"><span class="n mono">${s.n}</span><span class="label">${s.label}</span></div>`)
+    .join("");
+
+  const strategyLegend = document.getElementById("strategy-legend");
+  const strategyLegendDefs = [
+    { cls: "keep", label: "official", desc: `already ships in RxJS, never renamed (${officialCount})` },
+    { cls: "invalid", label: "not in RxJS", desc: `a gap in RxJS itself, not a rule this vocabulary enforces (${strategyTotal - officialCount})` },
+  ];
+  strategyLegend.innerHTML = strategyLegendDefs
     .map(
       (l) =>
         `<span class="legend-item"><span class="swatch ${l.cls}"></span><b>${l.label}</b><span class="desc">${l.desc}</span></span>`
