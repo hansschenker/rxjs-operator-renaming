@@ -161,6 +161,18 @@
     padding: 0.05em 0.35em;
   }
 
+  .rename-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 1.4rem 0 0.4rem;
+  }
+
+  .rename-card {
+    flex: 1 1 210px;
+    max-width: 240px;
+  }
+
   /* ---------- stat strip ---------- */
   .stats {
     display: flex;
@@ -566,6 +578,23 @@
     it isn't parameterized by strategy the way the rest of this family is.
   </p>
 
+  <hr class="section-rule">
+
+  <p class="eyebrow">aggregate renames · src/operators.ts</p>
+  <h2>Aggregates — Reduce Specializations</h2>
+  <p class="dek">
+    <code>count</code>, <code>max</code>, <code>min</code>, and <code>toArray</code> are
+    <code>reduce</code> specializations under the hood; <code>takeLast</code> shares the
+    same completion-triggered shape. All six are pure re-exports under a new name
+    (<code>kind: 'alias'</code>), not a root × boundary or strategy × family
+    composition, so a flat list is the right shape — not a grid. By the legend above
+    they get the same <b>renamed</b> flag as <code>bufferOn</code> or
+    <code>sampleOn</code>: the vocabulary name differs from official, so it isn't
+    <b>official</b>, which is reserved for names RxJS ships unchanged.
+  </p>
+
+  <div class="rename-grid" id="rename-grid"></div>
+
   <footer>
     <span>Source: <code>src/boundaries.ts</code>, <code>src/roots.ts</code>, <code>src/kept.ts</code>, <code>src/catalog.ts</code></span>
     <span>See also: <code>docs/rxjs-operator-naming-algebra.md</code></span>
@@ -876,6 +905,32 @@
         `<span class="legend-item"><span class="swatch ${l.cls}"></span><b>${l.label}</b><span class="desc">${l.desc}</span></span>`
     )
     .join("");
+
+  // ---------- aggregate renames — flat list, not a grid ----------
+
+  const AGGREGATES = [
+    { official: "reduce", friendly: "reduceOnComplete", note: "Folds all values; emits the single result when the source completes." },
+    { official: "count", friendly: "countOnComplete", note: "Counts values; emits the total when the source completes." },
+    { official: "max", friendly: "maxOnComplete", note: "Emits the largest value when the source completes." },
+    { official: "min", friendly: "minOnComplete", note: "Emits the smallest value when the source completes." },
+    { official: "toArray", friendly: "toArrayOnComplete", note: "Collects all values into one array; emits it when the source completes." },
+    { official: "takeLast", friendly: "takeLastOnComplete", note: "Buffers the last N values; emits them when the source completes." },
+  ];
+
+  const renameGrid = document.getElementById("rename-grid");
+  renameGrid.innerHTML = AGGREGATES.map(
+    (a) => `
+      <div class="rename-card">
+        <div class="cell valid">
+          <span class="composed">${a.friendly}</span>
+          <span class="target">≡ ${a.official}</span>
+          <div class="flag renamed">
+            <span class="flag-label">renamed</span>
+            <span class="flag-note">${a.note}</span>
+          </div>
+        </div>
+      </div>`
+  ).join("");
 </script>
 </body>
 </html>
