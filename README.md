@@ -331,7 +331,9 @@ All §5 steps are implemented:
 - `tests/` — 41 Vitest tests (marble + subject-driven + catalog consistency +
   story completeness + migration/lint drift + docs rendering + ESLint-engine
   preset checks) and compile-time assertions in `tests/type-errors.ts`
-- `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
+- `samples/buffer.ts`, `samples/take-skip.ts` — family demos in the composed
+  spelling (`npx tsx samples/buffer.ts`); take-skip exercises all four
+  boundaries including the generated `take(time(ms))` / `skip(time(ms))`
 - `src/docs.ts` + `scripts/generate-docs.mjs` — the VitePress "Operator Vocabulary"
   section for `rxjs-vitepress-ds` (`npm run generate:docs [target-dir]`): an
   overview page with the suffix grammar, 12 family pages rendering every operator
