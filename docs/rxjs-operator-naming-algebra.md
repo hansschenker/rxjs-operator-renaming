@@ -17,7 +17,7 @@ Two names in the vocabulary denote the same operator exactly when they reduce to
 same composition. That reduction is what "algebra" means here, as opposed to "style
 guide."
 
-> **[Open the interactive root × boundary matrix →](/operator-algebra-matrix.html)**
+> **<a href="/rxjs-operator-renaming/operator-algebra-matrix.html" target="_self">Open the interactive root × boundary matrix →</a>**
 > Every `root(boundary)` pair from §3–6 below, laid out as an 8×7 grid and
 > color-coded by kept / renamed / generated / blocked.
 
