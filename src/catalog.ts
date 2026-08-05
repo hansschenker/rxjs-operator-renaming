@@ -125,13 +125,13 @@ export const catalog: readonly CatalogEntry[] = [
   },
   {
     friendly: 'throttle', official: null, family: 'throttle', kind: 'root',
-    behavior: 'Emit, then suppress during the window: time (fixed) or when (per-value signal).',
+    behavior: 'Emit, then suppress during the window: time (fixed), when (per-value signal), or count (every nth value, leading).',
     story: {
       source: 'Source values arrive over time.',
       trigger: 'The first allowed value opens a suppression window; the boundary closes it.',
       value: 'The allowed value is emitted; values during the window are dropped.',
       cardinality: 'Many rapid values become at most one per window.',
-      time: 'The boundary defines the window: a fixed duration or a created signal.',
+      time: 'The boundary defines the window: a fixed duration, a created signal, or a count of values.',
       concurrency: 'One window is active at a time.',
       cancellation: 'Suppressed values are dropped, not buffered.',
       termination: 'Source error and completion are forwarded.',
@@ -153,10 +153,10 @@ export const catalog: readonly CatalogEntry[] = [
   },
   {
     friendly: 'sample', official: null, family: 'sample', kind: 'root',
-    behavior: 'Emit the latest value on a trigger: time (interval) or on (signal).',
+    behavior: 'Emit the latest value on a trigger: time (interval), on (signal), or count (every nth value, trailing).',
     story: {
       source: 'One source observable provides values; the boundary provides sampling ticks.',
-      trigger: 'The boundary ticks: a fixed interval elapses or the signal emits.',
+      trigger: 'The boundary ticks: a fixed interval elapses, the signal emits, or every nth value arrives.',
       value: 'The latest source value since the last tick is emitted; nothing is emitted if no new value arrived.',
       cardinality: 'Many source values become at most one per tick.',
       time: 'The boundary controls output timing.',

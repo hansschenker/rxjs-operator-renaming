@@ -135,9 +135,11 @@ const ROOT_EXAMPLES: Readonly<Record<string, string>> = {
   window:
     'window(time(1000))    // windowTime(1000)\\nwindow(count(5))      // windowCount(5)\\nwindow(on(split$))    // rxjs window(split$)\\nwindow(when(make))    // windowWhen(make)\\nwindow(toggle(o$, c)) // windowToggle(o$, c)',
   debounce: 'debounce(time(300))   // debounceTime(300)\\ndebounce(when(make))  // rxjs debounce(make)',
-  throttle: 'throttle(time(300))   // throttleTime(300)\\nthrottle(when(make))  // rxjs throttle(make)',
+  throttle:
+    'throttle(time(300))   // throttleTime(300)\\nthrottle(when(make))  // rxjs throttle(make)\\nthrottle(count(3))    // first of every 3 - generated',
   audit: 'audit(time(300))      // auditTime(300)\\naudit(when(make))     // rxjs audit(make)',
-  sample: 'sample(time(1000))    // sampleTime(1000)\\nsample(on(tick$))     // rxjs sample(tick$)',
+  sample:
+    'sample(time(1000))    // sampleTime(1000)\\nsample(on(tick$))     // rxjs sample(tick$)\\nsample(count(3))      // last of every 3 - generated',
 };
 
 const exampleFor = (e: CatalogEntry): string | undefined => {

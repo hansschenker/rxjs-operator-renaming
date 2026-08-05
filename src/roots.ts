@@ -8,6 +8,7 @@ import {
   bufferWhen as rxBufferWhen,
   debounce as rxDebounce,
   debounceTime as rxDebounceTime,
+  filter as rxFilter,
   sample as rxSample,
   sampleTime as rxSampleTime,
   skip as rxSkip,
@@ -133,7 +134,7 @@ export function debounce<T>(boundary: DebounceBoundary<T>): MonoTypeOperatorFunc
   }
 }
 
-export type ThrottleBoundary<T> = TimeBoundary | WhenBoundary<T>;
+export type ThrottleBoundary<T> = TimeBoundary | WhenBoundary<T> | CountBoundary;
 
 export function throttle<T>(boundary: ThrottleBoundary<T>): MonoTypeOperatorFunction<T> {
   switch (boundary.kind) {
@@ -141,6 +142,12 @@ export function throttle<T>(boundary: ThrottleBoundary<T>): MonoTypeOperatorFunc
       return rxThrottleTime(boundary.ms);
     case 'when':
       return rxThrottle(boundary.make);
+    case 'count': {
+      // Generated — no official throttleCount: the window is n values,
+      // so the first of every block of n survives (leading).
+      const period = Math.max(1, Math.floor(boundary.n));
+      return rxFilter<T>((_, index) => index % period === 0);
+    }
   }
 }
 
@@ -155,7 +162,7 @@ export function audit<T>(boundary: AuditBoundary<T>): MonoTypeOperatorFunction<T
   }
 }
 
-export type SampleBoundary = TimeBoundary | OnBoundary;
+export type SampleBoundary = TimeBoundary | OnBoundary | CountBoundary;
 
 export function sample<T>(boundary: SampleBoundary): MonoTypeOperatorFunction<T> {
   switch (boundary.kind) {
@@ -163,5 +170,12 @@ export function sample<T>(boundary: SampleBoundary): MonoTypeOperatorFunction<T>
       return rxSampleTime(boundary.ms);
     case 'on':
       return rxSample(boundary.signal$);
+    case 'count': {
+      // Generated — no official sampleCount: every nth value ticks the
+      // boundary, so the last of every block of n survives (trailing);
+      // a partial final block is dropped, like sampleTime on completion.
+      const period = Math.max(1, Math.floor(boundary.n));
+      return rxFilter<T>((_, index) => index % period === period - 1);
+    }
   }
 }

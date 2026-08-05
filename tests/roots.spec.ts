@@ -115,6 +115,20 @@ describe('timing roots', () => {
     });
   });
 
+  it('throttle(count(3)) keeps the first value of every block of three', () => {
+    makeScheduler().run(({ cold, expectObservable }) => {
+      const src = cold('abcdefgh|');
+      expectObservable(src.pipe(throttle(count(3)))).toBe('a--d--g-|');
+    });
+  });
+
+  it('sample(count(3)) keeps the last value of every full block of three', () => {
+    makeScheduler().run(({ cold, expectObservable }) => {
+      const src = cold('abcdefgh|');
+      expectObservable(src.pipe(sample(count(3)))).toBe('--c--f--|');
+    });
+  });
+
   it('throttleWhen suppresses until the created signal fires', () => {
     const src = new Subject<number>();
     const close = new Subject<void>();

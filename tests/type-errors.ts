@@ -4,8 +4,8 @@
  * This file is intentionally never executed.
  */
 import { of } from 'rxjs';
-import { count, toggle, whileTrue } from '../src/boundaries';
-import { buffer, debounce, sample, take } from '../src/roots';
+import { count, on, toggle, when, whileTrue } from '../src/boundaries';
+import { buffer, debounce, sample, take, throttle } from '../src/roots';
 
 // @ts-expect-error take does not accept a toggle boundary
 of(1).pipe(take(toggle(of(1), () => of(1))));
@@ -16,5 +16,8 @@ of(1).pipe(debounce(count(3)));
 // @ts-expect-error buffer does not accept a while boundary
 of(1).pipe(buffer(whileTrue((v: number) => v > 0)));
 
-// @ts-expect-error sample does not accept a count boundary
-of(1).pipe(sample(count(2)));
+// @ts-expect-error sample does not accept a when boundary
+of(1).pipe(sample(when(() => of(1))));
+
+// @ts-expect-error throttle does not accept an on boundary
+of(1).pipe(throttle(on(of(1))));

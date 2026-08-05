@@ -145,7 +145,7 @@ suffix grammar).
 | `pairwise` | `pairwise` | keep | Emits [previous, current] pairs. |
 | `reduceOnComplete` | `reduce` | alias | Folds all values; emits the single result when the source completes. |
 | `retry` | `retry` | keep | Resubscribes after errors per the retry policy. |
-| `sample` | — | root | Emit the latest value on a trigger: time (interval) or on (signal). |
+| `sample` | — | root | Emit the latest value on a trigger: time (interval), on (signal), or count (every nth value, trailing). |
 | `sampleOn` | `sample` | partial | `sample(on(signal$))` — Emits the latest source value each time the signal emits. |
 | `sampleTime` | `sampleTime` | keep | Periodically emits the latest value. |
 | `scan` | `scan` | keep | Emits the running accumulator state for every value. |
@@ -165,7 +165,7 @@ suffix grammar).
 | `takeUntil` | `takeUntil` | keep | Forwards values until the notifier emits, then completes. |
 | `takeWhile` | `takeWhile` | keep | Keeps values while the predicate holds, then completes. |
 | `tap` | `tap` | keep | Runs side effects without changing the stream. |
-| `throttle` | — | root | Emit, then suppress during the window: time (fixed) or when (per-value signal). |
+| `throttle` | — | root | Emit, then suppress during the window: time (fixed), when (per-value signal), or count (every nth value, leading). |
 | `throttleTime` | `throttleTime` | keep | Emits a value, then suppresses for a fixed duration. |
 | `throttleWhen` | `throttle` | partial | `throttle(when(make))` — Emits a value, then suppresses until the signal you created for it fires. |
 | `time` | — | boundary | A fixed clock duration drives the boundary. |

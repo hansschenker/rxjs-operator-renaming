@@ -154,8 +154,10 @@ Because roots × boundaries compose, valid combinations that have no official op
 fall out as compositions of official ones:
 
 ```ts
-take(time(ms))  // = takeUntil(timer(ms))  — "takeTime" does not exist in RxJS
-skip(time(ms))  // = skipUntil(timer(ms))
+take(time(ms))      // = takeUntil(timer(ms))  — "takeTime" does not exist in RxJS
+skip(time(ms))      // = skipUntil(timer(ms))
+throttle(count(n))  // = filter((_, i) => i % n === 0)      — first of every block of n
+sample(count(n))    // = filter((_, i) => i % n === n - 1)  — last of every block of n
 ```
 
 Only combinations whose semantics are an unambiguous composition are enabled; the
