@@ -16,8 +16,6 @@
 import { Subject, interval, map, take as rxTake, timer } from 'rxjs';
 import { buffer, bufferOn, count, on, time, toggle, when } from '../src/index';
 
-declare const console: { log: (...args: unknown[]) => void };
-
 // A stream of chat messages arriving quickly.
 const message$ = new Subject<string>();
 

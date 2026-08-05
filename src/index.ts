@@ -4,3 +4,4 @@ export * from './operators';
 export * from './wrappers';
 export * from './kept';
 export * from './catalog';
+export * from './migration';

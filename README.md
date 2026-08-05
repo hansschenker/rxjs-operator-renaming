@@ -315,11 +315,15 @@ The package scaffold (§5, steps 1–5 and 7) is implemented:
 - `src/wrappers.ts` — `shareLatest`
 - `src/kept.ts` — grammar-conform official names re-exported for one-stop imports
 - `src/catalog.ts` — the single source of truth (`catalog`, `keptOfficialNames`)
-- `tests/` — 27 Vitest tests (marble + subject-driven + catalog consistency) and
-  compile-time assertions in `tests/type-errors.ts`
+- `src/migration.ts` + `scripts/generate-migration.mjs` — `MIGRATION.md` generated
+  from the catalog (`npm run generate:migration`); a drift test fails when the file
+  on disk no longer matches the catalog
+- `tests/` — 29 Vitest tests (marble + subject-driven + catalog consistency +
+  migration drift) and compile-time assertions in `tests/type-errors.ts`
 - `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
 
-Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`.
+Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`,
+`npm run generate:migration`.
 
-Still open from §5: operator stories in the catalog (step 6), generated
-`MIGRATION.md` (step 8), VitePress docs integration (step 9), lint preset (step 10).
+Still open from §5: operator stories in the catalog (step 6), VitePress docs
+integration (step 9), lint preset (step 10).
