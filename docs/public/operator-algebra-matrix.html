@@ -533,26 +533,30 @@
   <hr class="section-rule">
 
   <p class="eyebrow">companion grid · src/kept.ts</p>
-  <h2>The Flattening Family — Map / All / Scan × Strategy</h2>
+  <h2>The Flattening Family — Strategy × Map / All / Scan</h2>
   <p class="dek">
     Concurrency strategy is a second, closed vocabulary — orthogonal to the boundary
-    grammar above, not an eighth column on it. A boundary is a tag a root switches on
-    in one dispatch call; a strategy only means something once you already have a
-    higher-order stream, so it combines with <b>map</b>
-    (<code>map(project) → xAll()</code>, the flattening law) or drives a bare
-    flatten/scan directly — it never dispatches through <b>take</b>, <b>buffer</b>,
-    or any root above. These ten names are the sacred core of the vocabulary:
-    <b>nothing here is renamed</b>.
+    grammar above, not an eighth column on it. README §2 itself calls
+    <b>concat</b>/<b>switch</b>/<b>merge</b>/<b>exhaust</b> "the four roots of the
+    flattening families," and the names confirm it — <code>concatMap</code>,
+    <code>switchAll</code>, <code>mergeScan</code> all put the strategy word first,
+    the same position <b>take</b> or <b>buffer</b> hold above. So strategy runs down
+    the <b>Y-axis</b> here, and <b>Map</b>/<b>All</b>/<b>Scan</b> — the shape of
+    flattening, not the concurrency policy — plays the boundary-like role across the
+    <b>X-axis</b>. A strategy only means something once you already have a
+    higher-order stream, so it combines with <code>map(project) → xAll()</code> (the
+    flattening law) or drives a bare flatten/scan directly. These ten names are the
+    sacred core of the vocabulary: <b>nothing here is renamed</b>.
   </p>
 
   <div class="stats" id="strategy-stats"></div>
   <div class="legend" id="strategy-legend"></div>
 
-  <p class="axis-x">X-Axis — Strategy</p>
+  <p class="axis-x">X-Axis — Map / All / Scan</p>
   <div class="board-row">
-    <p class="axis-y">Y-Axis — Family</p>
+    <p class="axis-y">Y-Axis — Strategy</p>
     <div class="matrix-scroll">
-      <table id="strategy-matrix" aria-label="Map, All, and Scan by concurrency strategy"></table>
+      <table id="strategy-matrix" aria-label="Concurrency strategy by Map, All, and Scan"></table>
     </div>
   </div>
 
@@ -744,7 +748,7 @@
     )
     .join("");
 
-  // ---------- companion grid: Map / All / Scan × Strategy ----------
+  // ---------- companion grid: Strategy × Map / All / Scan ----------
 
   const STRATEGIES = [
     { key: "concat", label: "concat", policy: "queue in order" },
@@ -754,27 +758,29 @@
   ];
 
   const FAMILIES = [
-    { key: "Map", label: "Map" },
-    { key: "All", label: "All" },
-    { key: "Scan", label: "Scan" },
+    { key: "Map", label: "Map", hint: "maps then flattens" },
+    { key: "All", label: "All", hint: "flattens directly" },
+    { key: "Scan", label: "Scan", hint: "accumulates async" },
   ];
 
   const STRATEGY_CELLS = {
-    Map: {
-      concat: { composed: "concatMap(project)", target: "map(project) → concatAll()" },
-      switch: { composed: "switchMap(project)", target: "map(project) → switchAll()" },
-      merge: { composed: "mergeMap(project, concurrent?)", target: "map(project) → mergeAll(concurrent?)" },
-      exhaust: { composed: "exhaustMap(project)", target: "map(project) → exhaustAll()" },
+    concat: {
+      Map: { composed: "concatMap(project)", target: "map(project) → concatAll()" },
+      All: { composed: "concatAll()", target: "flattens inner sources in order, queued" },
     },
-    All: {
-      concat: { composed: "concatAll()", target: "flattens inner sources in order, queued" },
-      switch: { composed: "switchAll()", target: "flattens the latest inner source, cancels prior" },
-      merge: { composed: "mergeAll(concurrent?)", target: "flattens inner sources concurrently" },
-      exhaust: { composed: "exhaustAll()", target: "flattens the first inner source, drops the rest" },
+    switch: {
+      Map: { composed: "switchMap(project)", target: "map(project) → switchAll()" },
+      All: { composed: "switchAll()", target: "flattens the latest inner source, cancels prior" },
+      Scan: { composed: "switchScan(accumulator, seed)", target: "only the latest async update survives" },
     },
-    Scan: {
-      switch: { composed: "switchScan(accumulator, seed)", target: "only the latest async update survives" },
-      merge: { composed: "mergeScan(accumulator, seed, concurrent?)", target: "overlapping async updates all merge in" },
+    merge: {
+      Map: { composed: "mergeMap(project, concurrent?)", target: "map(project) → mergeAll(concurrent?)" },
+      All: { composed: "mergeAll(concurrent?)", target: "flattens inner sources concurrently" },
+      Scan: { composed: "mergeScan(accumulator, seed, concurrent?)", target: "overlapping async updates all merge in" },
+    },
+    exhaust: {
+      Map: { composed: "exhaustMap(project)", target: "map(project) → exhaustAll()" },
+      All: { composed: "exhaustAll()", target: "flattens the first inner source, drops the rest" },
     },
   };
 
@@ -784,13 +790,13 @@
 
     const corner = document.createElement("th");
     corner.className = "corner";
-    corner.innerHTML = '<span class="plaque corner"><span class="bname">family ／ strategy</span></span>';
+    corner.innerHTML = '<span class="plaque corner"><span class="bname">strategy ／ family</span></span>';
     tr.appendChild(corner);
 
-    for (const s of STRATEGIES) {
+    for (const f of FAMILIES) {
       const th = document.createElement("th");
       th.scope = "col";
-      th.innerHTML = `<span class="plaque teal mono"><span class="bname">[${s.label}]</span><span class="barg">${s.policy}</span></span>`;
+      th.innerHTML = `<span class="plaque teal mono"><span class="bname">[${f.label}]</span><span class="barg">${f.hint}</span></span>`;
       tr.appendChild(th);
     }
     thead.appendChild(tr);
@@ -801,20 +807,20 @@
     const tbody = document.createElement("tbody");
     let officialCount = 0;
 
-    for (const f of FAMILIES) {
+    for (const s of STRATEGIES) {
       const tr = document.createElement("tr");
-      const rowCells = STRATEGY_CELLS[f.key] || {};
+      const rowCells = STRATEGY_CELLS[s.key] || {};
       const acceptedCount = Object.keys(rowCells).length;
       officialCount += acceptedCount;
 
       const rowHeader = document.createElement("th");
       rowHeader.scope = "row";
-      rowHeader.innerHTML = `<span class="plaque navy mono"><span class="bname">[${f.label}]</span><span class="barg">${acceptedCount}/${STRATEGIES.length}</span></span>`;
+      rowHeader.innerHTML = `<span class="plaque navy mono"><span class="bname">[${s.label}]</span><span class="barg">${s.policy}</span></span>`;
       tr.appendChild(rowHeader);
 
-      for (const s of STRATEGIES) {
+      for (const f of FAMILIES) {
         const td = document.createElement("td");
-        const entry = rowCells[s.key];
+        const entry = rowCells[f.key];
 
         if (!entry) {
           const missingName = `${s.key}${f.key}`;
