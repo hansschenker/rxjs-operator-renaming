@@ -11,10 +11,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./lint/*": "./lint/*"
   },
   "files": [
-    "dist"
+    "dist",
+    "lint"
   ],
   "sideEffects": false,
   "scripts": {
@@ -22,7 +24,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "generate:migration": "tsx scripts/generate-migration.mjs",
-    "generate:docs": "tsx scripts/generate-docs.mjs"
+    "generate:docs": "tsx scripts/generate-docs.mjs",
+    "generate:lint": "tsx scripts/generate-lint.mjs"
   },
   "repository": {
     "type": "git",
@@ -34,6 +37,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
     "rxjs": "^7.8.1",
     "tsup": "^8.2.0",
     "tsx": "^4.19.0",

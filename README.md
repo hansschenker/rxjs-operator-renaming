@@ -303,7 +303,7 @@ outside the grammar (their `On` refers to a scheduler, not a signal).
 
 ## 7. Status
 
-The package scaffold (§5, steps 1–5 and 7) is implemented:
+All §5 steps are implemented:
 
 - `src/boundaries.ts` — the suffix combinators (`time`, `count`, `whileTrue`,
   `until`, `on`, `when`, `toggle`) as a tagged discriminated union
@@ -322,9 +322,15 @@ The package scaffold (§5, steps 1–5 and 7) is implemented:
 - `src/migration.ts` + `scripts/generate-migration.mjs` — `MIGRATION.md` generated
   from the catalog (`npm run generate:migration`); a drift test fails when the file
   on disk no longer matches the catalog
-- `tests/` — 35 Vitest tests (marble + subject-driven + catalog consistency +
-  story completeness + migration drift + docs rendering) and compile-time
-  assertions in `tests/type-errors.ts`
+- `src/lint.ts` + `scripts/generate-lint.mjs` — ESLint flat-config preset
+  (`lint/rxjs-friendly-preset.mjs`, shipped with the package under
+  `rxjs-friendly/lint/*`): `no-restricted-imports` entries derived from the
+  catalog that point renamed officials to their friendly names, `shareReplay`
+  to `shareLatest`, and deprecated operators to their modern replacement —
+  kept names stay unrestricted
+- `tests/` — 41 Vitest tests (marble + subject-driven + catalog consistency +
+  story completeness + migration/lint drift + docs rendering + ESLint-engine
+  preset checks) and compile-time assertions in `tests/type-errors.ts`
 - `samples/buffer.ts` — the buffer family demo (`npx tsx samples/buffer.ts`)
 - `src/docs.ts` + `scripts/generate-docs.mjs` — the VitePress "Operator Vocabulary"
   section for `rxjs-vitepress-ds` (`npm run generate:docs [target-dir]`): an
@@ -333,6 +339,4 @@ The package scaffold (§5, steps 1–5 and 7) is implemented:
   page, and the sidebar JSON imported by `.vitepress/config.mts`
 
 Commands: `npm install`, `npm run typecheck`, `npm test`, `npm run build`,
-`npm run generate:migration`.
-
-Still open from §5: lint preset (step 10).
+`npm run generate:migration`, `npm run generate:docs`, `npm run generate:lint`.
